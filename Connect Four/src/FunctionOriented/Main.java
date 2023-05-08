@@ -46,7 +46,7 @@ public class Main {
         }
         return updatedBoard;
     }
-    public static String updateBoard() {
+    public static String currentBoard() {
         String updatedBoard = "";
         for (int i = 0; i < 25; i++) {
             updatedBoard += "=";
@@ -75,16 +75,16 @@ public class Main {
     }
 
     public static boolean isEmpty(int row, int col) {
-        if (" ".equals(String.valueOf(board[row][col]))) return false;
-        else return true;
+        if (" ".equals(String.valueOf(board[row][col]))) {
+            return false;
+        } else {
+            return true;
+        }
     }
     public static boolean isTakenBy(int row, int col, char player) {
         if (board[row][col] == player) return true;
         else if (board[row][col] == ' ') return false;
         else return false;
-    }
-    public boolean testWins() {
-        return false;
     }
     public static char isWinner() {
         for (int row = 0; row < rowSize - 3; row++) {
@@ -167,19 +167,15 @@ public class Main {
     public static void playConnectFour() {
         System.out.println("Welcome to connect four!");
         resetBoard();
-        int rowSize = board.length;
-        int colSize = board[0].length;
-        System.out.println(rowSize + ", " + colSize);
         while (true) {
-            System.out.println(updateBoard());
+            System.out.println(currentBoard());
             makeMove();
-
             if (isWinner() == 'X') {
-                System.out.println(updateBoard());
+                System.out.println(currentBoard());
                 System.out.println("Winner Player One");
                 break;
             } else if (isWinner() == 'O') {
-                System.out.println(updateBoard());
+                System.out.println(currentBoard());
                 System.out.println("Winner Player Two");
                 break;
             }
