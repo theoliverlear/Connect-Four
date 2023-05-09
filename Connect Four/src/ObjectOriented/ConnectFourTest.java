@@ -31,4 +31,27 @@ public class ConnectFourTest {
             }
         }
     }
+    @Test
+    public void testIsWinner() {
+        connectFourTest.getBoard().resetBoard();
+        for (int row = 0; row < 4; row++) {
+            connectFourTest.getBoard().setBoardSpot(row, 0, connectFourTest.getCurrentPlayer().getPlayerPiece());
+        }
+        assertThat(connectFourTest.isWinner(), equalTo('X'));
+        connectFourTest.getBoard().resetBoard();
+        for (int col = 0; col < 4; col++) {
+            connectFourTest.getBoard().setBoardSpot(0, col, connectFourTest.getCurrentPlayer().getPlayerPiece());
+        }
+        assertThat(connectFourTest.isWinner(), equalTo('X'));
+        connectFourTest.getBoard().resetBoard();
+        for (int duo = 0; duo < 4; duo++) {
+            connectFourTest.getBoard().setBoardSpot(duo, duo, connectFourTest.getCurrentPlayer().getPlayerPiece());
+        }
+        assertThat(connectFourTest.isWinner(), equalTo('X'));
+        connectFourTest.getBoard().resetBoard();
+        for (int cycle = 0; cycle < 4; cycle++) {
+            connectFourTest.getBoard().setBoardSpot(connectFourTest.getBoard().getRowSize() - 1 - cycle, connectFourTest.getBoard().getColSize() - 1 - cycle, connectFourTest.getCurrentPlayer().getPlayerPiece());
+        }
+        assertThat(connectFourTest.isWinner(), equalTo('X'));
+    }
 }

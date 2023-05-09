@@ -13,16 +13,16 @@ public class ConnectFour {
         return this.board;
     }
     public Player getPlayerX() {
-        return X;
+        return this.X;
     }
     public Player getPlayerO() {
-        return O;
+        return this.O;
     }
     public Player getCurrentPlayer() {
         if (this.getPlayerX().getIsCurrentPlayer()) {
-            return X;
+            return this.getPlayerX();
         } else {
-            return O;
+            return this.getPlayerO();
         }
     }
 
@@ -87,7 +87,7 @@ public class ConnectFour {
         }
     }
     public char isWinner() {
-        for (int row = 0; row < this.getBoard().getColSize() - 3; row++) {
+        for (int row = 0; row < this.getBoard().getRowSize() - 3; row++) {
             for (int col = 0; col < this.getBoard().getColSize(); col++) {
                 if (this.getBoard().getCharAt(row, col) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row + 1, col) == this.getCurrentPlayer().getPlayerPiece() &&
@@ -98,7 +98,7 @@ public class ConnectFour {
                 }
             }
         }
-        for (int row = 0; row < this.getBoard().getRowSize() - 3; row++) {
+        for (int row = 0; row < this.getBoard().getRowSize(); row++) {
             for (int col = 0; col < this.getBoard().getColSize() - 4; col++) {
                 if (this.getBoard().getCharAt(row, col) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row, col + 1) == this.getCurrentPlayer().getPlayerPiece() &&
