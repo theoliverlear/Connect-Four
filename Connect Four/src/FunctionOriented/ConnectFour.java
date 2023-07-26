@@ -1,7 +1,7 @@
 package FunctionOriented;
 import java.util.Arrays;
 import java.util.Scanner;
-public class Main {
+public class ConnectFour {
     static char[][] board = new char[6][7];
     static int rowSize = board.length;
     static int colSize = board[0].length;
@@ -136,7 +136,7 @@ public class Main {
          * */
         return 0;
     }
-    public static void makeMove() {
+    public static void makeMoveOld() {
         int choice = 0;
         System.out.println("Player: " + currentPlayer + ", please choose a spot between 1 and 7: ");
         boolean validInput = false;
@@ -164,6 +164,31 @@ public class Main {
 //        board[0][0] = currentPlayer;
         board[height][choice] = currentPlayer;
     }
+    public static void makeMove() {
+        while (true) {
+            System.out.println("Player: " + currentPlayer + ", please choose a spot between 1 and 7: ");
+            int userColChoice = input.nextInt() - 1;
+            if (userColChoice < 0 || userColChoice > 6) {
+                System.out.println((userColChoice + 1) + ": is not an option. Try again.");
+            } else {
+                int height = rowSize - 1;
+                while (isEmpty(height, userColChoice)) {
+                    height--;
+                    if (height == -1) {
+                        break;
+                    }
+                }
+                if (height == -1) {
+                    System.out.println("Cannot fill spot. Please choose a different spot.");
+                } else {
+                    board[height][userColChoice] = currentPlayer;
+                    break;
+                }
+            }
+        }
+    }
+
+
     public static void playConnectFour() {
         System.out.println("Welcome to connect four!");
         resetBoard();
