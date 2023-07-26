@@ -13,10 +13,10 @@ public class ConnectFour {
         return this.board;
     }
     public Player getPlayerX() {
-        return this.X;
+        return X;
     }
     public Player getPlayerO() {
-        return this.O;
+        return O;
     }
     public Player getCurrentPlayer() {
         if (this.getPlayerX().getIsCurrentPlayer()) {
@@ -25,7 +25,6 @@ public class ConnectFour {
             return this.getPlayerO();
         }
     }
-
     public String currentBoard() {
         String updatedBoard = "";
         for (int boardWidth = 0; boardWidth < 25; boardWidth++) {
@@ -53,30 +52,33 @@ public class ConnectFour {
         }
         return updatedBoard;
     }
+
     public void makeMove() {
-        int userColChoice = 0;
-        System.out.println("Player: " + getCurrentPlayer().getPlayerName() + ", please choose a spot between 1 and 7: ");
-        boolean validInput = false;
-        int height = this.getBoard().getRowSize() - 1;
-        while (!validInput) {
-            userColChoice = input.nextInt();
-            userColChoice -= 1;
+        while (true) {
+            System.out.println("Player: " + getCurrentPlayer().getPlayerName()
+                              + ", please choose a spot between 1 and 7: ");
+            int userColChoice = input.nextInt() - 1;
             if (userColChoice < 0 || userColChoice > 6) {
                 System.out.println((userColChoice + 1) + ": is not an option. Try again.");
             } else {
-                try {
-                    while (this.getBoard().isEmpty(height, userColChoice)) {
-                        height--;
+                int height = this.getBoard().getRowSize() - 1;
+                while (this.getBoard().isEmpty(height, userColChoice)) {
+                    height--;
+                    System.out.println("height: " + height);
+                    if (height == -1) {
+                        break;
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Cannot fill spot. Please choose a different spot.");
-                    validInput = false;
                 }
-                validInput = true;
+                if (height == -1) {
+                    System.out.println("Cannot fill spot. Please choose a different spot.");
+                } else {
+                    this.getBoard().setBoardSpot(height, userColChoice, this.getCurrentPlayer().getPlayerPiece());
+                    break;
+                }
             }
         }
-        this.getBoard().setBoardSpot(height, userColChoice, this.getCurrentPlayer().getPlayerPiece());
     }
+
     public void switchPlayer() {
         if (this.getPlayerX().getIsCurrentPlayer()) {
             this.getPlayerX().setIsCurrentPlayer(false);
