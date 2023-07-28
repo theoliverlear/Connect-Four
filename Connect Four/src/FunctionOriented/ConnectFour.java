@@ -188,7 +188,6 @@ public class ConnectFour {
         }
     }
 
-
     public static void playConnectFour() {
         System.out.println("Welcome to connect four!");
         resetBoard();

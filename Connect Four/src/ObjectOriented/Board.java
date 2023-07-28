@@ -30,7 +30,7 @@ public class Board {
         }
     }
     public boolean isEmpty(int row, int col) {
-        if (" ".equals(String.valueOf(getCharAt(row, col)))) {
+        if (" ".equals(String.valueOf(this.getCharAt(row, col)))) {
             return false;
         } else {
             return true;

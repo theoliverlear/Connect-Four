@@ -1,22 +1,23 @@
 package ObjectOriented;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 public class ConnectFour {
     static Scanner input = new Scanner(System.in);
-    static Player X, O;
+    Player X, O;
     Board board;
     public ConnectFour() {
-        X = new Player('X', true, "Player One");
-        O = new Player('O', false, "Player Two");
-        board = new Board(new char[6][7]);
+        this.X = new Player('X', true, "Player One");
+        this.O = new Player('O', false, "Player Two");
+        this.board = new Board(new char[6][7]);
     }
     public Board getBoard() {
         return this.board;
     }
     public Player getPlayerX() {
-        return X;
+        return this.X;
     }
     public Player getPlayerO() {
-        return O;
+        return this.O;
     }
     public Player getCurrentPlayer() {
         if (this.getPlayerX().getIsCurrentPlayer()) {
@@ -52,12 +53,18 @@ public class ConnectFour {
         }
         return updatedBoard;
     }
-
     public void makeMove() {
         while (true) {
-            System.out.println("Player: " + getCurrentPlayer().getPlayerName()
+            System.out.println("Player: " + this.getCurrentPlayer().getPlayerName()
                               + ", please choose a spot between 1 and 7: ");
-            int userColChoice = input.nextInt() - 1;
+            int userColChoice;
+            try {
+                userColChoice = input.nextInt() - 1;
+            } catch (InputMismatchException ex) {
+                System.out.println("Please enter a number between 1 and 7.");
+                input.nextLine();
+                continue;
+            }
             if (userColChoice < 0 || userColChoice > 6) {
                 System.out.println((userColChoice + 1) + ": is not an option. Try again.");
             } else {
@@ -77,7 +84,6 @@ public class ConnectFour {
             }
         }
     }
-
     public void switchPlayer() {
         if (this.getPlayerX().getIsCurrentPlayer()) {
             this.getPlayerX().setIsCurrentPlayer(false);
@@ -100,7 +106,7 @@ public class ConnectFour {
             }
         }
         for (int row = 0; row < this.getBoard().getRowSize(); row++) {
-            for (int col = 0; col < this.getBoard().getColSize() - 4; col++) {
+            for (int col = 0; col < this.getBoard().getColSize() - 3; col++) {
                 if (this.getBoard().getCharAt(row, col) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row, col + 1) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row, col + 2) == this.getCurrentPlayer().getPlayerPiece() &&
@@ -111,7 +117,7 @@ public class ConnectFour {
             }
         }
         for (int row = 0; row < this.getBoard().getRowSize() - 3; row++) {
-            for (int col = 0; col < this.getBoard().getColSize() - 4; col++) {
+            for (int col = 0; col < this.getBoard().getColSize() - 3; col++) {
                 if (this.getBoard().getCharAt(row, col) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row + 1, col + 1) == this.getCurrentPlayer().getPlayerPiece() &&
                     this.getBoard().getCharAt(row + 2, col + 2) == this.getCurrentPlayer().getPlayerPiece() &&
@@ -121,12 +127,12 @@ public class ConnectFour {
                 }
             }
         }
-        for (int row = this.getBoard().getRowSize() - 1; row - 3 > 0; row--) {
-            for (int col = this.getBoard().getColSize() - 1; col - 4 > 0; col--) {
+        for (int row = 0; row < this.getBoard().getRowSize() - 3; row++) {
+            for (int col = 3; col < this.getBoard().getColSize(); col++) {
                 if (this.getBoard().getCharAt(row, col) == this.getCurrentPlayer().getPlayerPiece() &&
-                    this.getBoard().getCharAt(row - 1, col - 1) == this.getCurrentPlayer().getPlayerPiece() &&
-                    this.getBoard().getCharAt(row - 2, col - 2) == this.getCurrentPlayer().getPlayerPiece() &&
-                    this.getBoard().getCharAt(row - 3, col - 3) == this.getCurrentPlayer().getPlayerPiece()) {
+                    this.getBoard().getCharAt(row + 1, col - 1) == this.getCurrentPlayer().getPlayerPiece() &&
+                    this.getBoard().getCharAt(row + 2, col - 2) == this.getCurrentPlayer().getPlayerPiece() &&
+                    this.getBoard().getCharAt(row + 3, col - 3) == this.getCurrentPlayer().getPlayerPiece()) {
                     //this.getCurrentPlayer().setIsWinner(true);
                     return this.getCurrentPlayer().getPlayerPiece();
                 }
