@@ -27,31 +27,32 @@ public class ConnectFour {
         }
     }
     public String currentBoard() {
-        String updatedBoard = "";
-        for (int boardWidth = 0; boardWidth < 25; boardWidth++) {
-            updatedBoard += "=";
-        }
-        updatedBoard += "\n";
-        for (int rowSet = 0; rowSet < this.getBoard().getRowSize(); rowSet++) {
+        StringBuilder updatedBoard = new StringBuilder();
+        updatedBoard.append("=".repeat(25));
+        updatedBoard.append("\n");
+        int rowSize = this.getBoard().getRowSize();
+        for (int rowSet = 0; rowSet < rowSize; rowSet++) {
             for (int colSet = 0; colSet < this.getBoard().getColSize(); colSet++) {
+                char spotChar = this.getBoard().getCharAt(rowSet, colSet);
                 if (colSet == this.getBoard().getColSize() - 1) {
-                    updatedBoard += this.getBoard().getCharAt(rowSet, colSet);
+                    updatedBoard.append(spotChar);
                 } else {
-                    updatedBoard += this.getBoard().getCharAt(rowSet, colSet) + " | ";
+                    updatedBoard.append(spotChar + " | ");
                 }
             }
-            updatedBoard += "\n";
+            updatedBoard.append("\n");
         }
-        for (int colSetSpot = 1; colSetSpot <= this.getBoard().getColSize(); colSetSpot++) {
+        int colSize = this.getBoard().getColSize();
+        for (int colSetSpot = 1; colSetSpot <= colSize; colSetSpot++) {
             if (colSetSpot == 1) {
-                updatedBoard += colSetSpot + "=";
+                updatedBoard.append(colSetSpot).append("=");
             } else if (colSetSpot == this.getBoard().getColSize()) {
-                updatedBoard += "==" + colSetSpot + "\n";
+                updatedBoard.append("==" + colSetSpot + "\n");
             } else {
-                updatedBoard += "==" + colSetSpot + "=";
+                updatedBoard.append("==" + colSetSpot + "=");
             }
         }
-        return updatedBoard;
+        return updatedBoard.toString();
     }
     public void makeMove() {
         while (true) {
