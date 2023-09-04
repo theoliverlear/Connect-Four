@@ -1,4 +1,5 @@
 package FunctionOriented;
+
 import java.util.Arrays;
 import java.util.Scanner;
 public class ConnectFour {
@@ -7,11 +8,75 @@ public class ConnectFour {
     static int colSize = board[0].length;
     static char currentPlayer = 'X';
     static Scanner input = new Scanner(System.in);
+    //==============================-Board-===================================
     public static void resetBoard() {
         for (int row = 0; row < rowSize; row++) {
             Arrays.fill(board[row], ' ');
         }
     }
+    //-------------------------------Add-Color--------------------------------
+    public static String addColor(String phrase, String color) {
+        String colorReset = "\u001B[0m";
+        String colorBlue = "\u001B[34m";
+        String colorCyan = "\u001B[36m";
+        String colorRed = "\u001B[31m";
+        String colorYellow = "\u001B[33m";
+        return switch (color) {
+            case "blue" -> colorBlue + phrase + colorReset;
+            case "cyan" -> colorCyan + phrase + colorReset;
+            case "red" -> colorRed + phrase + colorReset;
+            case "yellow" -> colorYellow + phrase + colorReset;
+            default -> phrase;
+        };
+    }
+    //----------------------------Add-Piece-Color-----------------------------
+    public static String addPieceColor(char playerPiece) {
+        String colorReset = "\u001B[0m";
+        String colorRed = "\u001B[31m";
+        String colorYellow = "\u001B[33m";
+        return switch (playerPiece) {
+            case 'X' -> colorRed + playerPiece + colorReset;
+            case 'O' -> colorYellow + playerPiece + colorReset;
+            default -> String.valueOf(playerPiece);
+        };
+    }
+    //------------------------Print-Current-Board-----------------------------
+    public static String currentBoard() {
+        String columnSeparator = addColor(" | ", "cyan");
+        String rowSeparator = addColor("=", "blue");
+        StringBuilder board = new StringBuilder();
+        board.append(rowSeparator.repeat(25));
+        board.append("\n");
+        for (int rowSet = 0; rowSet < rowSize; rowSet++) {
+            for (int colSet = 0; colSet < colSize; colSet++) {
+                String spotChar = addPieceColor(ConnectFour.board[rowSet][colSet]);
+                if (colSet == ConnectFour.board[rowSet].length - 1) {
+                    board.append(spotChar);
+                } else {
+                    board.append(spotChar + columnSeparator);
+                }
+            }
+            board.append("\n");
+        }
+        for (int colSetSpot = 1; colSetSpot <= colSize; colSetSpot++) {
+            if (colSetSpot == 1) {
+                board.append(colSetSpot + rowSeparator);
+            } else if (colSetSpot == colSize) {
+                board.append(rowSeparator.repeat(2) + colSetSpot + "\n");
+            } else {
+                board.append(rowSeparator.repeat(2) + colSetSpot
+                                                          + rowSeparator);
+            }
+        }
+        return board.toString();
+    }
+
+    public static boolean isTaken(int row, int col) {
+        return board[row][col] != ' ';
+    }
+    //==============================-Player-==================================
+
+    //---------------------------Switch-Player--------------------------------
     public static void switchPlayer() {
         if (currentPlayer == 'X') {
             currentPlayer = 'O';
@@ -19,74 +84,11 @@ public class ConnectFour {
             currentPlayer = 'X';
         }
     }
-    public static char getOpposingPlayer() {
-        if (currentPlayer == 'X') return 'O';
-        else return 'X';
-    }
-    public static String getBasicBoard() {
-        String updatedBoard = "";
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                if (j == board[i].length - 1) {
-                    updatedBoard += "X";
-                } else {
-                    updatedBoard += "X | ";
-                }
-            }
-            updatedBoard += "\n";
-        }
-        for (int i = 1; i <= colSize; i++) {
-            if (i == 1) {
-                updatedBoard += i + "=";
-            } else if (i == colSize) {
-                updatedBoard += "==" + i;
-            } else {
-                updatedBoard += "==" + i + "=";
-            }
-        }
-        return updatedBoard;
-    }
-    public static String currentBoard() {
-        String updatedBoard = "";
-        for (int i = 0; i < 25; i++) {
-            updatedBoard += "=";
-        }
-        updatedBoard += "\n";
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                if (j == board[i].length - 1) {
-                    updatedBoard += board[i][j];
-                } else {
-                    updatedBoard += board[i][j] + " | ";
-                }
-            }
-            updatedBoard += "\n";
-        }
-        for (int i = 1; i <= colSize; i++) {
-            if (i == 1) {
-                updatedBoard += i + "=";
-            } else if (i == colSize) {
-                updatedBoard += "==" + i + "\n";
-            } else {
-                updatedBoard += "==" + i + "=";
-            }
-        }
-        return updatedBoard;
-    }
+    //==============================-Game-====================================
 
-    public static boolean isEmpty(int row, int col) {
-        if (" ".equals(String.valueOf(board[row][col]))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    public static boolean isTakenBy(int row, int col, char player) {
-        if (board[row][col] == player) return true;
-        else if (board[row][col] == ' ') return false;
-        else return false;
-    }
+    //--------------------------Determine-Winner------------------------------
     public static char isWinner() {
+        //----------------------------Horizontal------------------------------
         for (int row = 0; row < rowSize - 3; row++) {
             for (int col = 0; col < colSize; col++) {
                 if (board[row][col] == currentPlayer &&
@@ -97,8 +99,9 @@ public class ConnectFour {
                 }
             }
         }
+        //----------------------------Vertical--------------------------------
         for (int row = 0; row < rowSize; row++) {
-            for (int col = 0; col < colSize - 4; col++) {
+            for (int col = 0; col < colSize - 3; col++) {
                 if (board[row][col] == currentPlayer &&
                     board[row][col + 1] == currentPlayer &&
                     board[row][col + 2] == currentPlayer &&
@@ -107,8 +110,9 @@ public class ConnectFour {
                 }
             }
         }
+        //-------------------------Upward-Diagonal----------------------------
         for (int row = 0; row < rowSize - 3; row++) {
-            for (int col = 0; col < colSize - 4; col++) {
+            for (int col = 0; col < colSize - 3; col++) {
                 if (board[row][col] == currentPlayer &&
                     board[row + 1][col + 1] == currentPlayer &&
                     board[row + 2][col + 2] == currentPlayer &&
@@ -117,16 +121,19 @@ public class ConnectFour {
                 }
             }
         }
-        for (int row = rowSize - 1; row - 3 > 0; row--) {
-            for (int col = colSize - 1; col - 4 > 0; col--) {
+        //-------------------------Downward-Diagonal--------------------------
+        for (int row = 0; row < rowSize - 3; row++) {
+            for (int col = 3; col < colSize; col++) {
                 if (board[row][col] == currentPlayer &&
-                    board[row - 1][col - 1] == currentPlayer &&
-                    board[row - 2][col - 2] == currentPlayer &&
-                    board[row - 3][col - 3] == currentPlayer) {
-                    return currentPlayer;
+                    board[row + 1][col - 1] == currentPlayer &&
+                    board[row + 2][col - 2] == currentPlayer &&
+                    board[row + 3][col - 3] == currentPlayer) {
+                    return 'D';
                 }
             }
         }
+        //----------------------------Draw------------------------------------
+
         /* [0, 0] | [0, 1] | [0, 2] | [0, 3] | [0, 4] | [0, 5] | [0, 6]
          * [1, 0] | [1, 1] | [1, 2] | [1, 3] | [1, 4] | [1, 5] | [1, 6]
          * [2, 0] | [2, 1] | [2, 2] | [2, 3] | [2, 4] | [2, 5] | [2, 6]
@@ -136,50 +143,26 @@ public class ConnectFour {
          * */
         return 0;
     }
-    public static void makeMoveOld() {
-        int choice = 0;
-        System.out.println("Player: " + currentPlayer + ", please choose a spot between 1 and 7: ");
-        boolean validInput = false;
-        int height = rowSize - 1;
-        while (!validInput){
-            choice = input.nextInt();
-            choice -= 1;
-            if (choice < 0 || choice > 6) {
-                System.out.println((choice+1) + ": is not an option. Try again.");
-            } else {
-                try {
-                    while (isEmpty(height, choice)) {
-                        height--;
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Cannot fill spot. Please choose a different spot.");
-                    validInput = false;
-                }
-                validInput = true;
-            }
-        }
-//        board[3][3] = currentPlayer;
-//        board[2][2] = currentPlayer;
-//        board[1][1] = currentPlayer;
-//        board[0][0] = currentPlayer;
-        board[height][choice] = currentPlayer;
-    }
+    //-----------------------------Make-Move----------------------------------
     public static void makeMove() {
         while (true) {
-            System.out.println("Player: " + currentPlayer + ", please choose a spot between 1 and 7: ");
+            System.out.println("Player: " + currentPlayer + ", please" +
+                               " choose a spot between 1 and 7: ");
             int userColChoice = input.nextInt() - 1;
             if (userColChoice < 0 || userColChoice > 6) {
-                System.out.println((userColChoice + 1) + ": is not an option. Try again.");
+                System.out.println((userColChoice + 1) + ": is not an " +
+                                                        "option. Try again.");
             } else {
                 int height = rowSize - 1;
-                while (isEmpty(height, userColChoice)) {
+                while (isTaken(height, userColChoice)) {
                     height--;
                     if (height == -1) {
                         break;
                     }
                 }
                 if (height == -1) {
-                    System.out.println("Cannot fill spot. Please choose a different spot.");
+                    System.out.println("Cannot fill spot. Please choose a" +
+                                                          " different spot.");
                 } else {
                     board[height][userColChoice] = currentPlayer;
                     break;
@@ -187,25 +170,33 @@ public class ConnectFour {
             }
         }
     }
-
+    //-----------------------------Play-Game----------------------------------
     public static void playConnectFour() {
         System.out.println("Welcome to connect four!");
+        String winnerText = "Winner: ";
         resetBoard();
         while (true) {
             System.out.println(currentBoard());
             makeMove();
             if (isWinner() == 'X') {
+                String playerNameColor = addColor("Player One", "red");
                 System.out.println(currentBoard());
-                System.out.println("Winner Player One");
+                System.out.println(winnerText + playerNameColor);
                 break;
             } else if (isWinner() == 'O') {
+                String playerNameColor = addColor("Player Two", "yellow");
                 System.out.println(currentBoard());
-                System.out.println("Winner Player Two");
+                System.out.println(winnerText + playerNameColor);
+                break;
+            } else if (isWinner() == 'D') {
+                System.out.println(currentBoard());
+                System.out.println("Draw Game");
                 break;
             }
             switchPlayer();
         }
     }
+    //===========================-Main-Method-================================
     public static void main(String[] args) {
         playConnectFour();
     }
