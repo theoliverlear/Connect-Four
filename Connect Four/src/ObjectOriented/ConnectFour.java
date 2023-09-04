@@ -40,7 +40,7 @@ public class ConnectFour {
         }
     }
     //------------------------Print-Current-Board-----------------------------
-   public String currentBoard() {
+    public String currentBoard() {
         String columnSeparator = this.addColor(" | ", "cyan");
         String rowSeparator = this.addColor("=", "blue");
         StringBuilder board = new StringBuilder();
