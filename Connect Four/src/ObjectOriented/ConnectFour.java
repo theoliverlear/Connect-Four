@@ -198,7 +198,7 @@ public class ConnectFour {
                 }
             }
         }
-        //-----------------------------Draw-Game------------------------------
+        //----------------------------Draw------------------------------------
         int boardSize = this.getBoard().getRowSize() * this.getBoard()
                                                            .getColSize();
         int boardCount = 0;
